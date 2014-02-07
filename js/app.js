@@ -24,11 +24,16 @@ function PixelPainter(width, height, pixel_size){
   this.height = height;
   this.pixel_size = pixel_size;
 
+  // store this in data-selected_color instead
+  // this.selected_color = "#000000";
+
   // Array<Array<Pixel>>
   this.grid = [];
 
   // these elements gets rendered
   this.element = $('<div>'); // main container
+  this.element.addClass("PixelPainter");
+  this.element.data("selected_color", "#000000");
 
   this.grid_container = $('<div>'); // contains the grid pixels
   this.grid_container.attr("id", "grid_container");
@@ -124,9 +129,12 @@ function Pixel (id, x, y, color) {
     this.element.css("background-color", this.color);
   }
 
-  this.changeColor = function(color){
+  // change color
+  this.element.click(function(e){
+    var pixelPainter = $(this).parents(".PixelPainter")[0];
+    $(this).css("background-color", $(pixelPainter).data("selected_color"));
+  });
 
-  };
 
   this.clear = function(){
 
@@ -165,9 +173,17 @@ function Button(){
 function ColorButton(color,index){
   this.color = color;
 
-  // use a pixel to render the element
-  var pixel = new Pixel("color_button",index,index,color); // x and y don't matter here
-  this.element = pixel.element;
+  this.element = $('<div>');
+  this.element.attr("id", this.id);
+  this.element.addClass("color_button"); // grid_pixel
+  if(this.color !== undefined){
+    this.element.css("background-color", this.color);
+  }
+
+  this.element.click(function (e) {
+    var pixelPainter = $(this).parents(".PixelPainter")[0];
+    $(pixelPainter).data("selected_color", $(this).css("background-color"));
+  });
   
   this.render = function () {
     return this.element;

@@ -18,7 +18,7 @@ div.color_button_row{
   height: 10px;
 }
 
-div.color_button_pixel{
+div.color_button{
   background: blue;
   border: 0px solid ;
   float: left;
