@@ -6,21 +6,34 @@ function PixelPainter(width, height, pixel_size){
   // Array<Array<Pixel>>
   this.grid = [];
 
-  // this gets rendered
-  this.element = $('<div>');
-
+  // these elements gets rendered
+  this.element = $('<div>'); // main container
+  this.grid_container = $('<div>'); // contains the grid pixels
+  this.grid_container.attr("id", "grid_container");
 
   this.buildGrid = function () {
 
     // rows
     for (var i = 0; i < this.width; i++) {
+      var row_div = $('<div>');
+      row_div.addClass('grid_row');
+      row_div.css({
+          width : (this.pixel_size*this.width)+"px",
+          height : this.pixel_size+"px"
+        });
       this.grid[i] = [];
 
       // height
       for (var k = 0; k < this.height; k++) {
         this.grid[i][k] = new Pixel("grid", i, k);
-
+        this.grid[i][k].element.css({
+          width : this.pixel_size+"px",
+          height : this.pixel_size+"px"
+        });
+        row_div.append(this.grid[i][k].render());
       }
+
+      this.grid_container.append(row_div);
 
     }
 
@@ -45,6 +58,8 @@ function PixelPainter(width, height, pixel_size){
   // initialize
   this.buildGrid();
 
+  // add the grid to the grid_container
+  this.element.append(this.grid_container);
 }
 
 function Pixel (id, x, y, color) {
@@ -55,6 +70,7 @@ function Pixel (id, x, y, color) {
 
   this.element = $('<div>');
   this.element.attr("id", this.id);
+  this.element.addClass(id+"_pixel"); // grid_pixel
 
   this.changeColor = function(color){
 
@@ -66,7 +82,7 @@ function Pixel (id, x, y, color) {
 
   // returns a JQuery obj
   this.render = function(){
-
+    return this.element;
   };
 }
 

@@ -1,0 +1,14 @@
+div#grid_container{
+
+}
+
+div.grid_row{
+
+}
+
+div.grid_pixel{
+  background: pink;
+  border: 0px solid ;
+  float: left;
+}
+
