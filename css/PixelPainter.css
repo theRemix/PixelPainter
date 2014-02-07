@@ -12,3 +12,18 @@ div.grid_pixel{
   float: left;
 }
 
+
+
+div.color_button_row{
+  height: 10px;
+}
+
+div.color_button_pixel{
+  background: blue;
+  border: 0px solid ;
+  float: left;
+  width: 10px;
+  height: 10px;
+}
+
+

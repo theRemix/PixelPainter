@@ -1,3 +1,24 @@
+window.ALL_COLORS = [
+  '#338899',
+  '#002299',
+  '#773300',
+  '#880099',
+  '#AA88FF',
+  '#CC9933',
+  '#F38899',
+  '#F02299',
+  '#F73300',
+  '#F80099',
+  '#FA88FF',
+  '#FC9933',
+  '#F38899',
+  '#F02299',
+  '#F73300',
+  '#F80099',
+  '#FA88FF',
+  '#FC9933'
+];
+
 function PixelPainter(width, height, pixel_size){
   this.width = width;
   this.height = height;
@@ -8,8 +29,12 @@ function PixelPainter(width, height, pixel_size){
 
   // these elements gets rendered
   this.element = $('<div>'); // main container
+
   this.grid_container = $('<div>'); // contains the grid pixels
   this.grid_container.attr("id", "grid_container");
+
+  this.toolbar_container = $('<div>');
+  this.toolbar_container.attr("id", "toolbar_container");
 
   this.buildGrid = function () {
 
@@ -40,7 +65,27 @@ function PixelPainter(width, height, pixel_size){
   };
 
   this.buildToolbar = function () {
-    
+
+    // split the colors into 4 columns of colors
+
+    var pixels_left = ALL_COLORS.length;
+    var current_container = $('<div class="color_button_row">');
+    while(pixels_left > 0){
+      var index = ALL_COLORS.length-pixels_left;
+
+      // create a button
+      var colorButton = new ColorButton(ALL_COLORS[index],index);
+      current_container.append(colorButton.render());
+
+      // every fourth, add it to the toolbar_container, then create a new row
+      if(index % 4 === 3){
+        this.toolbar_container.append(current_container);
+        current_container = $('<div class="color_button_row">');
+      }
+
+      pixels_left--;
+    }
+
   };
 
   // return pixel information in json
@@ -57,9 +102,13 @@ function PixelPainter(width, height, pixel_size){
 
   // initialize
   this.buildGrid();
+  this.buildToolbar();
 
-  // add the grid to the grid_container
+  // add the grid_container to the main app
   this.element.append(this.grid_container);
+
+  // add the toolbar to the main app
+  this.element.append(this.toolbar_container);
 }
 
 function Pixel (id, x, y, color) {
@@ -71,6 +120,9 @@ function Pixel (id, x, y, color) {
   this.element = $('<div>');
   this.element.attr("id", this.id);
   this.element.addClass(id+"_pixel"); // grid_pixel
+  if(this.color !== undefined){
+    this.element.css("background-color", this.color);
+  }
 
   this.changeColor = function(color){
 
@@ -110,7 +162,16 @@ function Button(){
 
 }
 
-function ColorButton(){
+function ColorButton(color,index){
+  this.color = color;
+
+  // use a pixel to render the element
+  var pixel = new Pixel("color_button",index,index,color); // x and y don't matter here
+  this.element = pixel.element;
+  
+  this.render = function () {
+    return this.element;
+  };
 
 }
 ColorButton.prototype = new Button();
@@ -131,6 +192,6 @@ ResetButton.prototype = new Button();
 
 $(document).ready(function () {
   var pixelPainter = new PixelPainter(5,5,15);
-  console.log(pixelPainter.grid);
+  
   $("#container").append(pixelPainter.render());
 });
