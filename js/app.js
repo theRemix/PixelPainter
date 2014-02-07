@@ -93,6 +93,20 @@ function PixelPainter(width, height, pixel_size){
 
   };
 
+  this.grid_container_mousedown = function(e){
+    // find the pixel coordinates
+    var x = Math.floor(e.clientX / this.pixel_size);
+    var y = Math.floor(e.clientY / this.pixel_size);
+    console.log(this.pixel_size);
+    // paint the pixel
+    console.log(x,y);
+  };
+
+  //              and mouse out
+  this.grid_container_mouseup = function (e) {
+    
+  };
+
   // return pixel information in json
   this.toJson = function () {
     
@@ -110,6 +124,9 @@ function PixelPainter(width, height, pixel_size){
   this.buildToolbar();
 
   // add the grid_container to the main app
+  this.grid_container.mousedown(this.grid_container_mousedown);
+  this.grid_container.mouseup(this.grid_container_mouseup);
+  this.grid_container.mouseout(this.grid_container_mouseup);
   this.element.append(this.grid_container);
 
   // add the toolbar to the main app
@@ -130,10 +147,11 @@ function Pixel (id, x, y, color) {
   }
 
   // change color
-  this.element.click(function(e){
+  
+  this.paint = function(){
     var pixelPainter = $(this).parents(".PixelPainter")[0];
     $(this).css("background-color", $(pixelPainter).data("selected_color"));
-  });
+  }
 
 
   this.clear = function(){
